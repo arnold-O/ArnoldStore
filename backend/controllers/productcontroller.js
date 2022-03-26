@@ -1,17 +1,22 @@
+const catchAsyncError = require('../middleware/catchAsyncError')
 const { findById } = require('../models/product')
 const  Product = require('../models/product')
 
 
+const ErrorHandler = require('../utils/errorhandler')
+
+
+
 //  create products
 
-exports.newProducts = async(req,res, next)=>{
+exports.newProducts = catchAsyncError(async(req,res, next)=>{
     const product = await Product.create(req.body)
     res.status(201).json({
         status:"product created successfully",
         product
     })
 
-}
+})
 
 
 
@@ -27,26 +32,25 @@ exports.getProducts = async(req, res, next)=>{
 
 // get one product
 
-exports.getOneProduct = async(req, res, next)=>{
+exports.getOneProduct = catchAsyncError(async(req, res, next)=>{
     const product = await Product.findById(req.params.id)
-    if(!product) return res.status(400).json({
-        status:"false",
-        messaage:"product not found"
-    })
+    if(!product) {
+        
+        return next(new ErrorHandler('product not found', 400))
+    }
+    
 
     res.status(200).json({
         status:true,
         product
     })
-}
+})
 
 
-exports.updateProduct = async(req, res, next) => {
+exports.updateProduct = catchAsyncError(async(req, res, next) => {
     let product = await Product.findById(req.params.id)
-    if(!product) return res.status(400).json({
-        status:"false",
-        messaage:"product not found"
-    })
+    if(!product) 
+    return next(new ErrorHandler('product not found', 400))
 
     product = await Product.findByIdAndUpdate(req.params.id, req.body, 
         {
@@ -60,16 +64,13 @@ exports.updateProduct = async(req, res, next) => {
             product
         })
 
-}
+})
 
 
-exports.deleteproduct = async(req, res, next)=>{
+exports.deleteproduct = catchAsyncError(async(req, res, next)=>{
 
     let product = await Product.findById(req.params.id)
-    if(!product) return res.status(400).json({
-        status:"false",
-        messaage:"product not found"
-    })
+    if(!product) return next(new ErrorHandler('product not found', 400))
 
     await product.remove()
     
@@ -81,4 +82,4 @@ exports.deleteproduct = async(req, res, next)=>{
 
 
 
-}
+})

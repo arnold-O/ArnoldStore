@@ -15,10 +15,19 @@ mongoose.connect(DB, {
 
 
 const port = process.env || 4000;
-app.listen(port, () => {
+
+ const server = app.listen(port, () => {
   console.log(`app running on port ${port}`);
 
 });
+
+process.on('unhandledRejection', err=>{
+  console.log(`Error: ${err.message}`)
+  console.log(`shutting dowm due to unhandled promises`)
+  server.close(()=>{
+    process.exit(1)
+  })
+})
 // this is amazing
 
 
