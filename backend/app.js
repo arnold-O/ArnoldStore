@@ -1,6 +1,7 @@
 const fs = require("fs");
 const express = require("express");
 const productRoutes = require('./routes/productroutes')
+const userRoutes = require('./routes/userroutes')
 
 const errorMiddleware = require('./middleware/error');
 const ErrorHandler = require("./utils/errorhandler");
@@ -13,6 +14,7 @@ app.use(express.json())
 
 // mouting Multiple router
 app.use('/api/products', productRoutes)
+app.use('/api/user', userRoutes)
 
 app.all('*', (req, res, next)=>{
 
