@@ -12,7 +12,23 @@ exports.isAuthenticatedUser = catchAsyncError(async (req, res, next)=>{
     }
     const decode = jwt.verify(token, process.env.JWT_SECRET)
     req.user = await User.findById(decode.id);
+    // console.log(req.user)
     
     next()
 
 })
+
+exports.authorizedRoles = (...roles)=>{
+    return (req, res, next)=>{
+        console.log(req)
+        if(!roles.includes(req.user.role)){
+            return next(new ErrorHandler(`Role ${req.user.role} you do not have permission is not allowed to acceess`, 403))
+
+        }
+          
+            
+        
+        next()
+    }
+    }
+
