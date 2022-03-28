@@ -10,6 +10,9 @@ const ErrorHandler = require('../utils/errorhandler')
 //  create products
 
 exports.newProducts = catchAsyncError(async(req,res, next)=>{
+
+    req.body.user = req.user.id
+    // console.log(req.body.user)
    
     const product = await Product.create(req.body)
     res.status(201).json({
@@ -23,7 +26,7 @@ exports.newProducts = catchAsyncError(async(req,res, next)=>{
 
 exports.getProducts = catchAsyncError(async(req, res, next)=>{
 
-    const productcount = await Product.countDocuments()
+    // const productcount = await Product.countDocuments()
 
     const apifeatures = new APIFeatures(Product.find(), req.query).search().filter().paginate()
     

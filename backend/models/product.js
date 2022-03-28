@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+// const { ObjectId } = mongoose.Schema;
 
 
 
@@ -90,6 +91,14 @@ const productSchema = new mongoose.Schema({
         }
 
     ],
+
+   user: {
+           type: mongoose.Schema.Types.ObjectId,
+           ref:"User",
+           required:true
+        
+           
+   },
     createdAt:{
         type:Date,
         default:Date.now()

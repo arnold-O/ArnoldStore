@@ -4,6 +4,7 @@ const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncError = require("./catchAsyncError");
 
 exports.isAuthenticatedUser = catchAsyncError(async (req, res, next)=>{
+    
     const { token } = req.cookies
    
 
@@ -25,8 +26,7 @@ exports.authorizedRoles = (...roles)=>{
             return next(new ErrorHandler(`Role ${req.user.role} you do not have permission is not allowed to acceess`, 403))
 
         }
-          
-            
+               
         
         next()
     }
