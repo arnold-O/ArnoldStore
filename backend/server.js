@@ -4,6 +4,15 @@ const dotenv = require('dotenv')
 // 
 dotenv.config({path: './config.env'})
 
+// handle the uncaught exception
+process.on ('uncaughtException', err=>{
+  console.log(`error ${err.stack}`)
+  console.log(`shutting down server due to uncaught exceptions`)
+  process.exit(1)
+})
+
+
+
 const DB = process.env.DATABASE_LOCAL
 
 mongoose.connect(DB, {
@@ -14,6 +23,8 @@ mongoose.connect(DB, {
 
 
 
+
+
 const port = process.env || 4000;
 
  const server = app.listen(port, () => {
@@ -21,13 +32,15 @@ const port = process.env || 4000;
 
 });
 
+// handle unhandled rejction
+
 process.on('unhandledRejection', err=>{
-  console.log(`Error: ${err.message}`)
+  console.log(`Error: ${err.stack}`)
   console.log(`shutting dowm due to unhandled promises`)
   server.close(()=>{
     process.exit(1)
   })
 })
-// this is amazing
+// this is amazing uncaught exception for example "console.log(a)" and we break our code
 
 
