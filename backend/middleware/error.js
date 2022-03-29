@@ -17,6 +17,10 @@ const handleJsonwebtokenError = err =>{
     const message = ` json web Token is invalid ! try Agian!!!!`
     return new ErrorHandler(message, 400)
 }
+const handleTokenExpiredError = err =>{
+    const message = ` json web Token has expired! try Agian!!!!`
+    return new ErrorHandler(message, 400)
+}
 
 module.exports = (err, req, res, next)=>{
     err.statusCode = err.statusCode || 500;
@@ -34,7 +38,12 @@ module.exports = (err, req, res, next)=>{
     if(err.code ===11000) err = handleDuplicateError(err)
 
     // handling wrong jwt error
-    if(err.name === "jsonwebtoken") err = handleJsonwebtokenError(err)
+    if(err.name === "JsonWebTokenError") err = handleJsonwebtokenError(err)
+
+
+
+        // handling expire jwt
+    if(err.name === "TokenExpiredError") err = handleTokenExpiredError(err)
 
 
         

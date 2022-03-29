@@ -152,6 +152,12 @@ exports.resetpassword = catchAsyncError(async (req,res, next)=>{
       sendToken(user, 200, res)
 
 })
+exports.getUserProfile = catchAsyncError(async (req,res, next)=>{
+    const user = await User.findById(req.user.id)
+    res.status(200).json({
+        user
+    })
+})
 
 
 
