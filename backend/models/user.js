@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require("bcryptjs")
 const Jwt = require('jsonwebtoken')
+const crypto = require("crypto");
 
 
 const userSchema = new mongoose.Schema({
@@ -69,6 +70,9 @@ userSchema.pre('save', async function(next){
     this.password = await bcrypt.hash(this.password, 10)
 })
 
+
+/*  here i used the methods attached to the schema to hash password */
+
 userSchema.methods.correctPassword = async function (
     candidatepassword,
     userPassword
@@ -77,12 +81,32 @@ userSchema.methods.correctPassword = async function (
   };
 
 
-
+/*  here i used the methods attached to the schema get jwt web token */
 
 userSchema.methods.getJwtToken = function(){
     return Jwt.sign({ id: this._id}, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN,
       });
+}
+
+// generate password reset token
+
+userSchema.methods.getResetPasswordToken = function(){
+    // generate token 
+    const resetToken = crypto.randomBytes(20).toString('hex')
+
+
+    // not advisable to send token the way it is hence we hash it 
+    
+        this.resetpasswordToken = crypto
+          .createHash("sha256")
+            .update(resetToken)
+            .digest("hex");
+            // create expires time for this token
+
+            this.resetPasswordExpire = Date.now() + 30 * 60 * 1000
+
+            return resetToken
 }
 
 

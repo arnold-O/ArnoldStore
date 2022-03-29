@@ -8,11 +8,11 @@ const { isAuthenticatedUser, authorizedRoles } = require('../middleware/authOrNo
 const router = express.Router()
 
 
-router.route('/new').post(isAuthenticatedUser, newProducts)
-router.route('/allproduct').get(isAuthenticatedUser, authorizedRoles('user'),  getProducts)
+router.route('/new').post(isAuthenticatedUser,  authorizedRoles('user'),  newProducts)
+router.route('/allproduct').get(isAuthenticatedUser, getProducts)
 router.route('/singleproduct/:id').get(getOneProduct)
-router.route('/update/:id').patch(isAuthenticatedUser, updateProduct)
-router.route('deleteprodct/:id').delete(isAuthenticatedUser, deleteproduct)
+router.route('/update/:id').patch(isAuthenticatedUser, authorizedRoles('admin'), updateProduct)
+router.route('deleteprodct/:id').delete(isAuthenticatedUser, authorizedRoles('admin'), deleteproduct)
 // router.route('/:id')u
 
 

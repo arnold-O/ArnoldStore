@@ -4,7 +4,7 @@ const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncError = require("./catchAsyncError");
 
 exports.isAuthenticatedUser = catchAsyncError(async (req, res, next)=>{
-    
+
     const { token } = req.cookies
    
 
@@ -18,6 +18,7 @@ exports.isAuthenticatedUser = catchAsyncError(async (req, res, next)=>{
     next()
 
 })
+// Here we see the roles declared in the schema been selected according to login
 
 exports.authorizedRoles = (...roles)=>{
     return (req, res, next)=>{
