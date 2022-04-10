@@ -12,7 +12,10 @@ const {
   getAllusers,
 } = require("../controllers/authcontroller");
 
-const { isAuthenticatedUser, authorizedRoles } = require("../middleware/authOrNot");
+const {
+  isAuthenticatedUser,
+  authorizedRoles,
+} = require("../middleware/authOrNot");
 
 const router = express.Router();
 
@@ -30,8 +33,9 @@ router.route("/create").post(registeruser);
 router.route("/login").post(loginuser);
 router.route("/logout").get(logoutUser);
 
-
-router.route("/getalluser/admin").get(isAuthenticatedUser, authorizedRoles("admin"), getAllusers)
+router
+  .route("/getalluser/admin")
+  .get(isAuthenticatedUser, authorizedRoles("admin"), getAllusers);
 
 // router.route('/:id')
 

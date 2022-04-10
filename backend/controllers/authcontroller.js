@@ -133,32 +133,27 @@ exports.resetpassword = catchAsyncError(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
+// updating users password
 
-// updating users password 
+exports.updatePassword = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
 
-exports.updatePassword = catchAsyncError(async(req,res, next)=>{
+  //  we getting the password as well so dat we can check the old pasword before assign the new one
+  console.log(user);
 
-     const  user = await User.findById(req.user.id).select('+password')
+  const checkOldHashedPassword = await user.correctPassword(
+    req.body.oldpassword
+  );
+  console.log(checkOldHashedPassword);
 
-    //  we getting the password as well so dat we can check the old pasword before assign the new one
-    console.log(user)
+  if (!checkOldHashedPassword) {
+    return next(new ErrorHandler("old password is not correct ", 400));
+  }
+  user.password = req.body.password;
+  await user.save();
 
-    const checkOldHashedPassword = await user.correctPassword(req.body.oldpassword)
-    console.log(checkOldHashedPassword)
-
-    if(!checkOldHashedPassword){
-        return next(new ErrorHandler('old password is not correct ', 400))
-    }
-    user.password = req.body.password
-    await user.save()
-    
-    sendToken(user, 200, res)
-})
-
-
-
-
-
+  sendToken(user, 200, res);
+});
 
 exports.logoutUser = catchAsyncError(async (req, res, next) => {
   res.cookie("token", null, {
@@ -171,26 +166,23 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// users functionalities
 
-// users functionalities 
-
-exports.updateprofile = catchAsyncError(async (req,res)=>{
+exports.updateprofile = catchAsyncError(async (req, res) => {
   const newUser = {
     name: req.body.name,
-    email:req.body.email
-  }
+    email: req.body.email,
+  };
   // learn how to add image cloudinery
 
   const user = await User.findByIdAndUpdate(req.user.id, newUser, {
-    run:true,
-    runValidators:true
-  })
+    run: true,
+    runValidators: true,
+  });
   res.status(200).json({
-    status:true
-  })
-
-})
-
+    status: true,
+  });
+});
 
 exports.getUserProfile = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user.id);
@@ -199,19 +191,13 @@ exports.getUserProfile = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// admin routes
 
-
-
-// admin routes 
-
-exports.getAllusers = catchAsyncError(async (req,res, next)=>{
-
+exports.getAllusers = catchAsyncError(async (req, res, next) => {
   const user = await User.find();
-  
 
   res.status(200).json({
     suceess: true,
-    user
-  })
-})
-
+    user,
+  });
+});

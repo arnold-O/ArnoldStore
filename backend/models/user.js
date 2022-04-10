@@ -65,8 +65,7 @@ userSchema.pre("save", async function (next) {
 
 /*  here i used the methods attached to the schema to hash password */
 
-userSchema.methods.correctPassword = async function (enteredPassword
-) {
+userSchema.methods.correctPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
