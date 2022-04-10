@@ -137,12 +137,13 @@ exports.resetpassword = catchAsyncError(async (req, res, next) => {
 // updating users password 
 
 exports.updatePassword = catchAsyncError(async(req,res, next)=>{
+
      const  user = await User.findById(req.user.id).select('+password')
 
     //  we getting the password as well so dat we can check the old pasword before assign the new one
     console.log(user)
 
-    const checkOldHashedPassword = await user.correctPassword(req.body.oldpassword, user.password)
+    const checkOldHashedPassword = await user.correctPassword(req.body.oldpassword)
     console.log(checkOldHashedPassword)
 
     if(!checkOldHashedPassword){
@@ -150,20 +151,14 @@ exports.updatePassword = catchAsyncError(async(req,res, next)=>{
     }
     user.password = req.body.password
     await user.save()
+    
     sendToken(user, 200, res)
 })
 
 
 
 
-exports.getUserProfile = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
-  res.status(200).json({
-    user,
-  });
-});
 
-exports
 
 exports.logoutUser = catchAsyncError(async (req, res, next) => {
   res.cookie("token", null, {
@@ -175,3 +170,48 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
     message: "logout",
   });
 });
+
+
+// users functionalities 
+
+exports.updateprofile = catchAsyncError(async (req,res)=>{
+  const newUser = {
+    name: req.body.name,
+    email:req.body.email
+  }
+  // learn how to add image cloudinery
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUser, {
+    run:true,
+    runValidators:true
+  })
+  res.status(200).json({
+    status:true
+  })
+
+})
+
+
+exports.getUserProfile = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  res.status(200).json({
+    user,
+  });
+});
+
+
+
+
+// admin routes 
+
+exports.getAllusers = catchAsyncError(async (req,res, next)=>{
+
+  const user = await User.find();
+  
+
+  res.status(200).json({
+    suceess: true,
+    user
+  })
+})
+
