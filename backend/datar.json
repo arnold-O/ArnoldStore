@@ -1,0 +1,29 @@
+{
+  "itemsPrice": 23,
+  "shippingPrice": 5,
+  "taxPrice": 2.5,
+  "totalPrice": 30.5,
+
+  "orderItems": [
+    {
+      "name": "television",
+      "price": "23",
+      "image": "htt",
+      "quantity": 2
+    }
+  ],
+  "shippingInfo": 
+    {
+        "address":"no 23, oba Akenzua road benin city",
+        "city":"Ibadan",
+        "phoneNumber":"09076543262",
+        "postalCode":"322711",
+        "country":"Nigeria"
+    },
+  
+  "paymentInfo": {
+      "id":"12346787652343gert",
+      "status": "succeeded"
+  }
+
+}
