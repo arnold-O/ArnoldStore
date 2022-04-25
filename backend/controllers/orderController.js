@@ -1,5 +1,6 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const Order = require("../models/order");
+
 const Product = require("../models/product");
 const ErrorHandler = require("../utils/errorhandler");
 
@@ -72,3 +73,52 @@ exports.getAllOrders = catchAsyncError(async (req, res, next) => {
     totalAmount,
   });
 });
+
+
+exports.updateOrders = catchAsyncError(async (req, res, next) => {
+  
+  const myOrder = await Order.findById(req.params.id);
+  
+  console.log(myOrder.orderStatus)
+  if(myOrder.orderStatus === "Delivered"){
+    return next(new ErrorHandler('you have already delivered this', 400))
+  }
+
+  myOrder.orderItems.forEach( async function(item){
+     await  updateStock(item.product, item.quantity)
+
+  })
+
+  myOrder.orderStatus = req.body.status
+  myOrder.deliveredAt = Date.now()
+
+  await myOrder.save()
+
+  res.status(200).json({
+    success: true,
+   
+  });
+});
+
+
+async function updateStock(id, quantity){
+  const product = await Product.findById(id);
+
+  product.stock = product.stock - quantity
+
+  await product.save({validateBeforeSave:false})
+}
+
+
+exports.deleteorder = catchAsyncError(async (req, res, next)=>{
+  const myOrder = await Order.findById(req.params.id)
+
+  if(!myOrder){
+    return next(new ErrorHandler("No product to delete", 400))
+  }
+  await myOrder.remove()
+
+  res.status(200).json({
+    success:true
+  })
+})

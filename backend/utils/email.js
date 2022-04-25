@@ -39,6 +39,7 @@ const sendEmail = async (options) => {
 
   // send mail
   await transpoter.sendMail(mailOption);
+  
 };
 
 module.exports = sendEmail;

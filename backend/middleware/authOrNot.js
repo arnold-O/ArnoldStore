@@ -24,7 +24,7 @@ exports.authorizedRoles = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return next(
         new ErrorHandler(
-          `Role ${req.user.role} you do not have permission is not allowed to acceess`,
+          `Role ${req.user.role} you do not have permission, hence you are not allowed to acceess`,
           403
         )
       );
