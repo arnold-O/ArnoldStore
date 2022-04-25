@@ -1,6 +1,7 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 // const { findById } = require('../models/product')
 const Product = require("../models/product");
+const { propfind } = require("../routes/order");
 const APIFeatures = require("../utils/apifeatures");
 
 const ErrorHandler = require("../utils/errorhandler");
@@ -72,4 +73,37 @@ exports.deleteproduct = catchAsyncError(async (req, res, next) => {
     status: true,
     message: "product deleted",
   });
+});
+
+// review section
+
+exports.createProductReview = catchAsyncError(async (req, res, next) => {
+  const { rating, comment, productId } = req.body;
+  
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
+
+  const myOrder = await Product.findById(productId)
+
+  const AlreadyReviwed = myOrder.reviews.find(
+    rev=> rev.user.toString() === req.user._id.toString()
+  )
+  if(AlreadyReviwed){
+    myOrder.reviews.forEach(rev=>{
+      if(rev.user.toString()===req.user._id.toString()){
+        review.comment = comment
+        review.rating = rating
+      }
+    })
+
+  }else{
+    myOrder.reviews.push(review)
+    myOrder.numOfReviews = myOrder.reviews.length
+  }
+
+
 });
