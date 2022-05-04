@@ -1,13 +1,14 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
-// const { findById } = require('../models/product')
+const product = require("../models/product");
+
 const Product = require("../models/product");
-const { propfind } = require("../routes/order");
+
 const APIFeatures = require("../utils/apifeatures");
+
 
 const ErrorHandler = require("../utils/errorhandler");
 
 //  create products
-
 exports.newProducts = catchAsyncError(async (req, res, next) => {
   req.body.user = req.user.id;
   // console.log(req.body.user)
@@ -78,6 +79,7 @@ exports.deleteproduct = catchAsyncError(async (req, res, next) => {
 // review section
 
 exports.createProductReview = catchAsyncError(async (req, res, next) => {
+  
   const { rating, comment, productId } = req.body;
   
   const review = {
@@ -88,13 +90,14 @@ exports.createProductReview = catchAsyncError(async (req, res, next) => {
   };
 
   const myOrder = await Product.findById(productId)
+  console.log(myOrder)
 
   const AlreadyReviwed = myOrder.reviews.find(
-    rev=> rev.user.toString() === req.user._id.toString()
+    review=> `${review.user}`.toString() === `${req.user._id}`.toString()
   )
   if(AlreadyReviwed){
     myOrder.reviews.forEach(rev=>{
-      if(rev.user.toString()===req.user._id.toString()){
+      if(`${rev.user}`.toString() === `${req.user._id}`.toString()){
         review.comment = comment
         review.rating = rating
       }
@@ -105,5 +108,29 @@ exports.createProductReview = catchAsyncError(async (req, res, next) => {
     myOrder.numOfReviews = myOrder.reviews.length
   }
 
+  myOrder.ratings = myOrder.reviews.reduce((acc, item)=>item.rating + acc, 0) / myOrder.reviews.length
+
+  await myOrder.save({validateBeforeSave: false})
+
+
+  res.status(200).json({
+    success: true
+  })
+
 
 });
+
+
+exports.getAllReviews = catchAsyncError(async (req, res, next)=>{
+  const myOrder = await Product.findById(req.query.id);
+
+  console.log(myOrder)
+
+
+  
+  res.status(200).json({
+    success: true,
+   review : myOrder.reviews
+  })
+})
+

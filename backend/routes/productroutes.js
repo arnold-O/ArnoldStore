@@ -6,6 +6,8 @@ const {
   getOneProduct,
   updateProduct,
   deleteproduct,
+  createProductReview,
+  getAllReviews,
 } = require("../controllers/productcontroller");
 const {
   isAuthenticatedUser,
@@ -16,15 +18,17 @@ const router = express.Router();
 
 router
   .route("/new")
-  .post(isAuthenticatedUser, authorizedRoles("user"), newProducts);
+  .post(isAuthenticatedUser, authorizedRoles("admin"), newProducts);
 router.route("/allproduct").get(isAuthenticatedUser, getProducts);
 router.route("/singleproduct/:id").get(getOneProduct);
 router
   .route("/update/:id")
   .patch(isAuthenticatedUser, authorizedRoles("admin"), updateProduct);
 router
-  .route("deleteprodct/:id")
+  .route("/deleteprodct/:id")
   .delete(isAuthenticatedUser, authorizedRoles("admin"), deleteproduct);
-// router.route('/:id')u
+router.route('/review').put(isAuthenticatedUser, authorizedRoles('admin'), createProductReview)
+
+router.route('/allreview').get(isAuthenticatedUser, authorizedRoles('admin'), getAllReviews)
 
 module.exports = router;

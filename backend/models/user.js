@@ -68,7 +68,7 @@ userSchema.pre("save", async function (next) {
 /*  here i used the methods attached to the schema to hash password */
 
 userSchema.methods.correctPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(`${enteredPassword}`, this.password);
 };
 
 /*  here i used the methods attached to the schema get jwt web token */
