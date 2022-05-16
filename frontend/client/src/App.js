@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from './component/Home';
 import Header from './component/layout/Header';
 import Footer from './component/layout/Footer';
+import GetterActions from './store/GetterActions';
 
 
 
@@ -25,6 +26,7 @@ function App() {
       </Routes>
       <Footer/>
     </BrowserRouter>
+  
 
   
   );

@@ -19,9 +19,9 @@ app.use("/api/products", productRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/order", orderRoutes);
 
-app.all("*", (req, res, next) => {
-  next(new ErrorHandler(`cant find ${req.originalUrl} on this server`, 404));
-});
+// app.all("*", (req, res, next) => {
+//   next(new ErrorHandler(`cant find ${req.originalUrl} on this server`, 404));
+// });
 
 app.use(errorMiddleware);
 

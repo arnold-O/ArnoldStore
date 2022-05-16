@@ -19,7 +19,7 @@ const router = express.Router();
 router
   .route("/new")
   .post(isAuthenticatedUser, authorizedRoles("admin"), newProducts);
-router.route("/allproduct").get(isAuthenticatedUser, getProducts);
+router.route("/allproduct").get( getProducts);
 router.route("/singleproduct/:id").get(getOneProduct);
 router
   .route("/update/:id")
@@ -30,5 +30,6 @@ router
 router.route('/review').put(isAuthenticatedUser, authorizedRoles('admin'), createProductReview)
 
 router.route('/allreview').get(isAuthenticatedUser, authorizedRoles('admin'), getAllReviews)
+
 
 module.exports = router;

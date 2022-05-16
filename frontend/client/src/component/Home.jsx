@@ -1,11 +1,22 @@
+import { useSelector } from 'react-redux';
+
+
 import React, { Fragment } from "react";
+
 import MeataData from "./layout/MeataData";
 
 export default function Home() {
+
+  const product = useSelector(state=> state.product.products)
+
+  console.log(product)
+
+
+
   return (
     <Fragment>
       <MeataData title={'Buy all your product here'}/>
-      <div className="container px-1">
+      <div className="container-lg ">
         <p className="text-center h2 mb-3 mt-3">Latest Product</p>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 gx-5  mb-3 mt-5">
           <div className="col mb-3">
@@ -127,6 +138,37 @@ export default function Home() {
             </div> 
           </div>
         </div>
+          {/* <div className='container-fluid'>
+            
+        <div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-5  mb-3 mt-5  '>
+
+<div className='col  shadow border d-flex align-items-center ' style={{height:"70px"}}>
+  <span className='me-2 h4'> <i class="fas fa-star"></i></span>
+  <span className='d-inline h4'>Free Delivery</span>
+</div>
+<div className='col  bg-white shadow border  d-flex  align-items-center ' style={{height:"70px"}}>
+<span className='me-2 h4'> <i class="fas fa-star"></i></span>
+  <span className='d-inline h4'>Free Delivery</span>
+</div>
+<div className='col  bg-white shadow border  d-flex  align-items-center ' style={{height:"70px"}}>
+ <span className='me-2 h4'> <i class="fas fa-star"></i></span>
+  <span className='d-inline h4'>Free Delivery</span>
+</div>
+<div className='col  bg-white shadow border  d-flex  align-items-center ' style={{height:"70px"}}>
+<span className='me-2'> <i class="fas fa-star"></i></span>
+  <span className='d-inline h4'>Free Delivery</span>
+</div>
+
+
+
+</div>
+          </div> */}
+
+          <div className='grid-base'>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+          </div>
       </div>
     </Fragment>
   );

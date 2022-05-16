@@ -51,7 +51,7 @@ exports.loginuser = catchAsyncError(async (req, res, next) => {
 
   // check password is correct or not
 
-  const IspasswordCorrect =  await user.correctPassword(password);
+  const IspasswordCorrect = await user.correctPassword(password);
 
   if (!IspasswordCorrect) {
     return next(new ErrorHandler("wrong credentials", 401));
