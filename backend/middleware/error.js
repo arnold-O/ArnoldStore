@@ -27,7 +27,7 @@ module.exports = (err, req, res, next) => {
 
   // wrong mongoose Object Id Error
   let error = { ...err };
-  
+
   if (err.name === "CastError") err = handleCAstDBError(err);
 
   // hadlimg mongoose validation Error

@@ -74,51 +74,45 @@ exports.getAllOrders = catchAsyncError(async (req, res, next) => {
   });
 });
 
-
 exports.updateOrders = catchAsyncError(async (req, res, next) => {
-  
   const myOrder = await Order.findById(req.params.id);
-  
-  console.log(myOrder.orderStatus)
-  if(myOrder.orderStatus === "Delivered"){
-    return next(new ErrorHandler('you have already delivered this', 400))
+
+  console.log(myOrder.orderStatus);
+  if (myOrder.orderStatus === "Delivered") {
+    return next(new ErrorHandler("you have already delivered this", 400));
   }
 
-  myOrder.orderItems.forEach( async function(item){
-     await  updateStock(item.product, item.quantity)
+  myOrder.orderItems.forEach(async function (item) {
+    await updateStock(item.product, item.quantity);
+  });
 
-  })
+  myOrder.orderStatus = req.body.status;
+  myOrder.deliveredAt = Date.now();
 
-  myOrder.orderStatus = req.body.status
-  myOrder.deliveredAt = Date.now()
-
-  await myOrder.save()
+  await myOrder.save();
 
   res.status(200).json({
     success: true,
-   
   });
 });
 
-
-async function updateStock(id, quantity){
+async function updateStock(id, quantity) {
   const product = await Product.findById(id);
 
-  product.stock = product.stock - quantity
+  product.stock = product.stock - quantity;
 
-  await product.save({validateBeforeSave:false})
+  await product.save({ validateBeforeSave: false });
 }
 
+exports.deleteOrder = catchAsyncError(async (req, res, next) => {
+  const myOrder = await Order.findById(req.params.id);
 
-exports.deleteOrder = catchAsyncError(async (req, res, next)=>{
-  const myOrder = await Order.findById(req.params.id)
-
-  if(!myOrder){
-    return next(new ErrorHandler("No product to delete", 400))
+  if (!myOrder) {
+    return next(new ErrorHandler("No product to delete", 400));
   }
-  await myOrder.remove()
+  await myOrder.remove();
 
   res.status(200).json({
-    success:true
-  })
-})
+    success: true,
+  });
+});

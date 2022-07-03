@@ -5,7 +5,6 @@ const Product = require("../models/product");
 
 const APIFeatures = require("../utils/apifeatures");
 
-
 const ErrorHandler = require("../utils/errorhandler");
 
 //  create products
@@ -16,6 +15,7 @@ exports.newProducts = catchAsyncError(async (req, res, next) => {
   const product = await Product.create(req.body);
   res.status(201).json({
     status: "product created successfully",
+
     product,
   });
 });
@@ -79,9 +79,8 @@ exports.deleteproduct = catchAsyncError(async (req, res, next) => {
 // review section
 
 exports.createProductReview = catchAsyncError(async (req, res, next) => {
-  
   const { rating, comment, productId } = req.body;
-  
+
   const review = {
     user: req.user._id,
     name: req.user.name,
@@ -89,48 +88,42 @@ exports.createProductReview = catchAsyncError(async (req, res, next) => {
     comment,
   };
 
-  const myOrder = await Product.findById(productId)
-  console.log(myOrder)
+  const myOrder = await Product.findById(productId);
+  console.log(myOrder);
 
   const AlreadyReviwed = myOrder.reviews.find(
-    review=> `${review.user}`.toString() === `${req.user._id}`.toString()
-  )
-  if(AlreadyReviwed){
-    myOrder.reviews.forEach(rev=>{
-      if(`${rev.user}`.toString() === `${req.user._id}`.toString()){
-        review.comment = comment
-        review.rating = rating
+    (review) => `${review.user}`.toString() === `${req.user._id}`.toString()
+  );
+  if (AlreadyReviwed) {
+    myOrder.reviews.forEach((rev) => {
+      if (`${rev.user}`.toString() === `${req.user._id}`.toString()) {
+        review.comment = comment;
+        review.rating = rating;
       }
-    })
-
-  }else{
-    myOrder.reviews.push(review)
-    myOrder.numOfReviews = myOrder.reviews.length
+    });
+  } else {
+    myOrder.reviews.push(review);
+    myOrder.numOfReviews = myOrder.reviews.length;
   }
 
-  myOrder.ratings = myOrder.reviews.reduce((acc, item)=>item.rating + acc, 0) / myOrder.reviews.length
+  myOrder.ratings =
+    myOrder.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    myOrder.reviews.length;
 
-  await myOrder.save({validateBeforeSave: false})
+  await myOrder.save({ validateBeforeSave: false });
 
-
-  res.status(200).json({
-    success: true
-  })
-
-
-});
-
-
-exports.getAllReviews = catchAsyncError(async (req, res, next)=>{
-  const myOrder = await Product.findById(req.query.id);
-
-  console.log(myOrder)
-
-
-  
   res.status(200).json({
     success: true,
-   review : myOrder.reviews
-  })
-})
+  });
+});
 
+exports.getAllReviews = catchAsyncError(async (req, res, next) => {
+  const myOrder = await Product.findById(req.query.id);
+
+  console.log(myOrder);
+
+  res.status(200).json({
+    success: true,
+    review: myOrder.reviews,
+  });
+});
